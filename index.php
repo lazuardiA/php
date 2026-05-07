@@ -1,5 +1,4 @@
 <?php include 'koneksi.php'; ?>
-
 <!DOCTYPE html>
 <html>
 <head>
@@ -9,23 +8,20 @@
     <h2>Tambah Data</h2>
     <form method="POST">
         <input type="text" name="nama" placeholder="Nama" required>
-        <input type="sandi" name="sandi" placeholder="sandi" required>
+        <input type="password" name="sandi" placeholder="sandi" required>
         <button type="submit" name="tambah">Simpan</button>
     </form>
-
     <?php
-
 ini_set('display_errors', 1);
 ini_set('display_startup_errors', 1);
 error_reporting(E_ALL);
-
     // Logika Create
     if(isset($_POST['tambah'])){
         $nama = $_POST['nama'];
         $sandi = $_POST['sandi'];
+        $sandi = password_hash($sandi, PASSWORD_DEFAULT);
         mysqli_query($koneksi, "INSERT INTO users (nama, sandi) VALUES('$nama', '$sandi')");
     }
-
     // Logika Delete
     if(isset($_GET['hapus'])){
         $id = $_GET['hapus'];
@@ -33,13 +29,11 @@ error_reporting(E_ALL);
         header("Location: index.php");
     }
     ?>
-
     <h2>Data Users</h2>
     <table border="1">
         <tr>
             <th>ID</th>
             <th>Nama</th>
-            <th>sandi</th>
             <th>Aksi</th>
         </tr>
         <?php
@@ -49,9 +43,8 @@ error_reporting(E_ALL);
         <tr>
             <td><?php echo $d['id']; ?></td>
             <td><?php echo $d['nama']; ?></td>
-            <td><?php echo $d['sandi']; ?></td>
             <td>
-                <a href="index.php?hapus=<?php echo $d['id']; ?>">Hapus</a>
+                <a href="index.php?hapus=<?php echo $d['id']; ?>" onclick="return confirm('Yakin hapus?')">Hapus</a>
             </td>
         </tr>
         <?php } ?>
